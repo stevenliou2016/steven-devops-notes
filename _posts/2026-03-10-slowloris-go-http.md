@@ -3,8 +3,6 @@ title: Slowloris Attack on Go HTTP Server
 date: 2026-03-10
 ---
 
-# Slowloris Attack on Go HTTP Server
-
 ## Introduction
 
 Slowloris is a classic application-layer denial-of-service attack that keeps
@@ -15,22 +13,22 @@ to keep connections alive and exhaust server resources such as file descriptors.
 
 In this article, we will:
 
-• Build a minimal Go HTTP server
-• Simulate a Slowloris attack using a custom Go client
-• Observe the server behavior using pprof and Linux tools
-• Analyze resource exhaustion (FD, connections, goroutines)
-• Implement mitigations
+• Build a minimal Go HTTP server  
+• Simulate a Slowloris attack using a custom Go client  
+• Observe the server behavior using pprof and Linux tools  
+• Analyze resource exhaustion (FD, connections, goroutines)  
+• Implement mitigations  
 
 ---
 
 ## Architecture
 
-Test environment:
-attacker
-|
-| slow HTTP headers
-|
-Go HTTP Server (Docker)
+Test environment:  
+attacker  
+|  
+| slow HTTP headers  
+|  
+Go HTTP Server (Docker)  
 
 Docker configuration:
 

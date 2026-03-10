@@ -3,8 +3,6 @@ layout: page
 title: About
 ---
 
-# About
-
 Steven Liou
 
 Backend / DevOps engineer focusing on:

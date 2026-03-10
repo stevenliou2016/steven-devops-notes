@@ -3,8 +3,6 @@ layout: home
 title: Steven DevOps Notes
 ---
 
-# Steven DevOps Notes
-
 DevOps / Backend Engineering Experiments
 
 This site documents engineering experiments, debugging processes,
