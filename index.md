@@ -1,5 +1,6 @@
 ---
 layout: home
+title: Steven DevOps Notes
 ---
 
 DevOps / Backend Engineering Experiments
