@@ -2,6 +2,9 @@ title: Steven DevOps Notes
 description: DevOps / Backend Engineering Notes
 author: Steven Liou
 
+url: "https://stevenliou2016.github.io"
+baseurl: "/steven-devops-notes"
+
 theme: minima
 
 markdown: kramdown
