@@ -1,0 +1,11 @@
+title: Steven DevOps Notes
+description: DevOps / Backend Engineering Notes
+author: Steven Liou
+
+theme: minima
+
+markdown: kramdown
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
