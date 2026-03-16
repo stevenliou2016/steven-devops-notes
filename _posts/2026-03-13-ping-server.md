@@ -1,7 +1,7 @@
 ---
 title: Why Can I Ping One Server but Not Another?
-subtilte: A Network Debugging Case Study on a Linux Host
-date: 2026-03-10
+description: A Network Debugging Case Study on a Linux Host
+date: 2026-03-13
 ---
 
 ## Introduction
