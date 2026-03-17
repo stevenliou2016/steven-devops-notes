@@ -19,29 +19,60 @@ At first glance, this looked like a typical firewall problem, but the investigat
 
 All IP addresses in this article are from a lab environment. I will reproduce this issue via docker.
 
-```
-Client
-10.20.17.25
-
-Server A
-10.10.50.9
-
-Server B
-10.10.50.10
-```
+Network topology
+![Network topology](/assets/images/ping-server-debug/network_topology.webp)
 
 The server was running Docker with the default bridge network enabled.
 
 ## Initial Observation
 
+The client ping server A successfully.
 ```
-# success
-ping 10.10.50.9
+ping -c 3 10.10.50.9
+PING 10.10.50.9 (10.10.50.9) 56(84) bytes of data.
+64 bytes from 10.10.50.9: icmp_seq=1 ttl=63 time=0.140 ms
+64 bytes from 10.10.50.9: icmp_seq=2 ttl=63 time=0.074 ms
+64 bytes from 10.10.50.9: icmp_seq=3 ttl=63 time=0.096 ms
+
+--- 10.10.50.9 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2025ms
+rtt min/avg/max/mdev = 0.074/0.103/0.140/0.027 ms
 ```
 
+The client ping server B.
 ```
-# failure
-ping 10.10.50.10
+ping -c 3 10.10.50.10
+PING 10.10.50.10 (10.10.50.10) 56(84) bytes of data.
+
+--- 10.10.50.10 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2057ms
+```
+The client receives no response.
+
+server A ping server B successfully.
+```
+ping -c 3 10.10.50.10
+PING 10.10.50.10 (10.10.50.10): 56 data bytes
+64 bytes from 10.10.50.10: seq=0 ttl=64 time=0.087 ms
+64 bytes from 10.10.50.10: seq=1 ttl=64 time=0.072 ms
+64 bytes from 10.10.50.10: seq=2 ttl=64 time=0.092 ms
+
+--- 10.10.50.10 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.072/0.083/0.092 ms
+```
+
+server B ping server A successfully.
+```
+ping -c 3 10.10.50.9
+PING 10.10.50.9 (10.10.50.9): 56 data bytes
+64 bytes from 10.10.50.9: seq=0 ttl=64 time=0.118 ms
+64 bytes from 10.10.50.9: seq=1 ttl=64 time=0.087 ms
+64 bytes from 10.10.50.9: seq=2 ttl=64 time=0.085 ms
+
+--- 10.10.50.9 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.085/0.096/0.118 ms
 ```
 
 ## First Hypothesis: Firewall
