@@ -17,19 +17,17 @@ At first glance, this looked like a typical firewall problem, but the investigat
 
 ## Environment
 
-Example:
-```
-Client network
-10.20.16.0/22
+All IP addresses in this article are from a lab environment. I will reproduce this issue via docker.
 
+```
 Client
 10.20.17.25
 
-Server
-10.10.50.10
+Server A
+10.10.50.9
 
-Gateway
-10.10.50.1
+Server B
+10.10.50.10
 ```
 
 The server was running Docker with the default bridge network enabled.
