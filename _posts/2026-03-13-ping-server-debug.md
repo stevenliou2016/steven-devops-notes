@@ -20,7 +20,7 @@ At first glance, this looked like a typical firewall problem, but the investigat
 All IP addresses in this article are from a lab environment. I will reproduce this issue via docker.
 
 Network topology
-![Network topology](/assets/images/ping-server-debug/network_topology.webp)
+![Network topology]({{ "/assets/images/ping-server-debug/network_topology.webp" | relative_url }})
 
 The server was running Docker with the default bridge network enabled.
 
