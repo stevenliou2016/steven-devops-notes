@@ -75,6 +75,19 @@ PING 10.10.50.9 (10.10.50.9): 56 data bytes
 round-trip min/avg/max = 0.085/0.096/0.118 ms
 ```
 
+
+## Debugging Approach
+
+To systematically identify the issue, the following steps were used:
+
+1. Verify connectivity (ping)
+2. Confirm packet arrival (tcpdump)
+3. Analyze routing decisions (ip route get)
+4. Identify root cause (network overlap)
+
+This approach helps isolate whether the issue is caused by connectivity, routing, or firewall policies.
+
+
 ## Packet Capture Investigation
 
 Perform packet capture on server B.
@@ -91,7 +104,7 @@ PING 10.10.50.10 (10.10.50.10) 56(84) bytes of data.
 --- 10.10.50.10 ping statistics ---
 3 packets transmitted, 0 received, 100% packet loss, time 2025ms
 ```
-Packet cature on server B
+Packet capture on server B
 ```
 # On server B
 tcpdump -i any icmp
@@ -108,6 +121,7 @@ listening on any, link-type LINUX_SLL2 (Linux cooked v2), snapshot length 262144
 Server B received the ICMP echo request.  
 10.20.17.25 → 10.10.50.10: ICMP echo request  
 But, the client never received a reply.
+The ICMP "host unreachable" messages indicate that Server B could not determine a valid path back to the client.
 
 
 ## Checking Routing Decisions
@@ -141,26 +155,15 @@ The kernel believed that the destination was reachable via docker0.
 
 ## Root Cause
 
-The /etc/docker/daemon.json configuration sets the docker0 IP to 10.20.16.1 and the subnet to 10.20.16.0/20.
-```
-{
-  "bip": "10.20.16.1/20"
-}
-```
-Client network overlaps with docker0 subnet.
-```
-The client network is 10.20.16.0/22 (range: 10.20.16.0–10.20.19.255).
-The Docker network is 10.20.16.0/20 (range: 10.20.16.0–10.20.31.255).
-→ Overlap
-```
-Linux routing behavior
-```
-Linux selects routes based on longest prefix match Connected routes (like docker0) take precedence
-```
-Result
-```
-Reply packets are routed to docker0 instead of the actual gateway.
-```
+The issue is caused by overlapping subnets between the client network and Docker bridge network.
+
+- Client network: 10.20.16.0/22
+- Docker network: 10.20.16.0/20
+
+Since the Docker bridge network (docker0) is a directly connected route,
+Linux routing prefers it over other routes when determining the egress interface.
+
+As a result, ICMP reply packets are incorrectly routed to docker0 instead of the actual gateway.
 
 
 ## The Fix
